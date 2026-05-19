@@ -76,6 +76,8 @@ cp .env.example .env
 streamlit run app.py
 ```
 
+> Note: For deployed Streamlit apps, `.env` is local-only. Configure `GROQ_API_KEY` or `GROK_API_KEY` in your deployment environment variables / Streamlit secrets instead. 
+
 The app opens at **http://localhost:8501**
 
 ---
@@ -127,7 +129,7 @@ The app opens at **http://localhost:8501**
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `GROK_API_KEY` | Yes | Your xAI Grok API key |
+| `GROK_API_KEY` | Yes | Your xAI Grok API key (also supports `GROQ_API_KEY` for compatibility) |
 
 ---
 

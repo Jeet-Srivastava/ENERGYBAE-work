@@ -9,9 +9,14 @@ import os
 import json
 import base64
 from openai import OpenAI
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+try:
+    import streamlit as st
+except Exception:
+    st = None
+
+load_dotenv(find_dotenv())
 
 # Groq API client (lazily initialized)
 _client = None
@@ -23,9 +28,15 @@ def _get_client() -> OpenAI:
     if _client is None:
         # Check both GROK and GROQ env vars since the user confused them
         api_key = os.getenv("GROQ_API_KEY") or os.getenv("GROK_API_KEY")
+        if not api_key and st is not None:
+            try:
+                api_key = st.secrets.get("GROQ_API_KEY") or st.secrets.get("GROK_API_KEY")
+            except Exception:
+                pass
+
         if not api_key:
             raise ValueError(
-                "API key not found. Please set GROQ_API_KEY in your .env file.\n"
+                "API key not found. Please set GROQ_API_KEY or GROK_API_KEY in your .env file or deployment secrets.\n"
                 "Get your key at https://console.groq.com"
             )
         _client = OpenAI(
